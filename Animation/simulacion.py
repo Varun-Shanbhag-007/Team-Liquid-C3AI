@@ -5,9 +5,9 @@ from matplotlib.animation import FuncAnimation
 
 #SIMULATION PARAMETERS
 n=350  #number of individuals
-p_infectadas = 1  #percentage of infected people at the beginning of the simulation (0-100%)
+p_infectadas = 10  #percentage of infected people at the beginning of the simulation (0-100%)
 r_contagio=2  #radius of transmission in pixels (0-100)
-p_contagio=4  #probability of transmission in percentage (0-100%)
+p_contagio=10  #probability of transmission in percentage (0-100%)
 p_aislamiento = 70  #percentage of the people in quarantine (0-100%)
 t_contagiado=100   #time taken to recover in number of frames (0-infinity)
 
