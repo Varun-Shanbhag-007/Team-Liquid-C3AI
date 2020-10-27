@@ -6,6 +6,7 @@ import matplotlib.patches as patches
 from matplotlib.animation import FuncAnimation
 
 squares= [[0,0,200,200],[400,400,600,600],[800,800,1000,1000]]
+entries = [(100,200), (500, 600), (900, 800)]
 
 
 #SIMULATION PARAMETERS
