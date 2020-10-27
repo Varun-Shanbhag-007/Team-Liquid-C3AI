@@ -22,7 +22,7 @@ class Person:
         self.is_quarantined = action
 
     def __repr__(self):
-        return("Person " + str(self.idx) +" -> "+ str(self.status))
+        return("Person " + str(self.idx) +" -> "+ str(self.status) + " @ " + str(self.x) +" , "+ str(self.y))
 
     
 
