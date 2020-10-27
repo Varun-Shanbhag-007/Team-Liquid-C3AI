@@ -5,13 +5,31 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from matplotlib.animation import FuncAnimation
 
-squares= [[0,0,200,200],[400,400,600,600],[800,800,1000,1000]]
+squares= [[0,0,20,20],[40,40,60,60],[80,80,100,100]]
 entries = [(100,200), (500, 600), (900, 800)]
 
 
+matrix = []
+x = 101
+y = 101
+
+for i in range(x):
+    temp=[]
+    for j in range(y):
+        if((i>=0 and i<20) and (j>=0 and j<20)):
+            temp.append(0)
+        elif((i>=40 and i<60) and (j>=40 and j<60)):
+            temp.append(0)
+        elif((i>=80 and i<100) and (j>=80 and j<100)):
+            temp.append(0)
+        else:
+            temp.append(1)        
+    matrix.append(temp)
+
+
 #SIMULATION PARAMETERS
-scale = 1000
-n = 1000  #Population size
+scale = 100
+n = 10000  #Population size
 infected_percent = 50  #percentage of infected people at the beginning of the simulation (0-100%)
 infection_radius=5  #radius of transmission in pixels (0-100)
 contraction_probability=50  #probability of transmission in percentage (0-100%)
@@ -39,8 +57,8 @@ fig = plt.figure(figsize=(18,18))
 ax = fig.add_subplot(111) 
 
 ax.add_patch(patches.Rectangle((0,0),scale/5,scale/5,fill=False))
-ax.add_patch(patches.Rectangle((400,400),scale/5,scale/5,fill=False))
-ax.add_patch(patches.Rectangle((800,800),scale/5,scale/5,fill=False))
+ax.add_patch(patches.Rectangle((40,40),scale/5,scale/5,fill=False))
+ax.add_patch(patches.Rectangle((80,80),scale/5,scale/5,fill=False))
 
 plt.scatter([person.x for person in population], [person.y for person in population], s=4, c=[return_color(person.status.value) for person in population])
 plt.show()

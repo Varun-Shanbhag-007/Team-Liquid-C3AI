@@ -1,4 +1,8 @@
 from enum import Enum
+from pathfinding.core.diagonal_movement import DiagonalMovement
+from pathfinding.core.grid import Grid
+from pathfinding.finder.a_star import AStarFinder
+
 class Status(Enum):
     SUSCEPTIBLE = 0
     INFECTED = 1
@@ -23,3 +27,13 @@ def within(point, squares):
                 return True
 
     return False
+
+
+
+def getPath(matrix,x1,y1,x2,y2):
+    grid = Grid(matrix = matrix)
+
+    finder = AStarFinder(diagonal_movement=DiagonalMovement.never)
+    path, runs = finder.find_path(grid.node(x1,y1),grid.node(x2,y2), grid)
+
+    return path
