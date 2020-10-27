@@ -4,8 +4,8 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
 #SIMULATION PARAMETERS
-n=350  #number of individuals
-p_infectadas = 1  #percentage of infected people at the beginning of the simulation (0-100%)
+n = 2  #number of individuals
+p_infectadas = 100  #percentage of infected people at the beginning of the simulation (0-100%)
 r_contagio=2  #radius of transmission in pixels (0-100)
 p_contagio=4  #probability of transmission in percentage (0-100%)
 p_aislamiento = 70  #percentage of the people in quarantine (0-100%)
@@ -14,6 +14,8 @@ t_contagiado=100   #time taken to recover in number of frames (0-infinity)
 
 contagiados=0
 personas=[]
+
+count = 22
 
 #creating all the individuals in random positions. Infecting some of them
 for i in range(n):
@@ -55,11 +57,18 @@ t=[0]
 
 #function excecuted frame by frame
 def update(frame,rt,ct,t):
+    global count,n 
     contciclo = 0
     recuciclo = 0
     colores = []
     sizes = [8 for p in personas]
+    count = 0
     for p in personas:
+        if p.retirado:
+            count += 1
+        if count == n:
+            while True:
+                pass
         #check how much time the person has been sick
         p.check_contagio(frame)
         #animate the movement of each person
@@ -100,5 +109,11 @@ def update(frame,rt,ct,t):
     return scatt,cvst,rvst
 
 #run the animation indefinitely
-animation = FuncAnimation(fig, update, interval=25,fargs=(rt,ct,t),blit=True)
+# while True:
+animation = FuncAnimation(fig, update, interval=25,fargs=(rt,ct,t),blit=True, repeat=False)
 plt.show()
+
+#     if count == n:
+#         break
+
+# print("/*///*/*/*/*")
