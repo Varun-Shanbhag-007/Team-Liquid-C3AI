@@ -20,6 +20,7 @@ class Person:
         self.velocity = 1
         self.dest_x, self.dest_y = home_coords
         self.movement = []
+        self.day_infected = -1
 
 
     def get_current_position(self):
@@ -31,6 +32,7 @@ class Person:
 
 
     def make_up_mind(self, entries, matrix):
+        # print("Making mind for", self)
         dest = (np.random.choice(4, 1, p=[0.5, 0.2, 0.2, 0.1]))[0]
 
         if dest != 0:

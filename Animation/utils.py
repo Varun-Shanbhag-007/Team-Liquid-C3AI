@@ -16,7 +16,7 @@ def return_color(status_enum):
     elif status_enum == 1:
         return 'red'
     else:
-        return 'yellow'
+        return 'cyan'
 
 
 def within(point, squares):

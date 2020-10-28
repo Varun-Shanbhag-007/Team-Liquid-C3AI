@@ -32,7 +32,7 @@ for entry in entries:
 
 #SIMULATION PARAMETERS
 scale = 100
-n = 50 #Population size
+n = 1000 #Population size
 infected_percent = 50  #percentage of infected people at the beginning of the simulation (0-100%)
 infection_radius=5  #radius of transmission in pixels (0-100)
 contraction_probability=50  #probability of transmission in percentage (0-100%)
@@ -41,6 +41,8 @@ recovery_time=200   #time taken to recover in number of frames (0-infinity)
 
 population = []
 currently_infected = 0
+day = 0
+iteration = 0
 people_to_infect = n * infected_percent/100
 
 for i in range(n):
@@ -50,6 +52,8 @@ for i in range(n):
     
     if i < people_to_infect:
         p = Person(i, random_coords, Status.INFECTED)
+        currently_infected += 1
+        p.day_infected = 0
     else:
         p = Person(i, random_coords, Status.SUSCEPTIBLE)
 
@@ -68,7 +72,10 @@ scatt = ax.scatter([person.x for person in population], [person.y for person in 
 
 
 def update(frame):
+    global day, iteration
     for person in population:
+        
+        # Movement
         if len(person.movement) == 0:
             person.make_up_mind(entries,matrix)
         
@@ -85,11 +92,24 @@ def update(frame):
         if person.y < 0:
             person.y = 0
 
+        # Infection
+        if person.status == Status.INFECTED and day - person.day_infected >= 14:
+            person.status = Status.RECOVERED
+        
+    # Day count
+    iteration += 1
+    if iteration == 800:
+        day += 1
+        iteration = 0
+
+
     offsets = np.array([[person.x for person in population], [person.y for person in population]])
     scatt.set_offsets(np.ndarray.transpose(offsets))
+    scatt.set_color([return_color(person.status.value) for person in population])
+    print(day, iteration)
     return scatt,
 
-animation = FuncAnimation(fig, update, blit=True, interval=25)
+animation = FuncAnimation(fig, update, blit=True, interval=5)
 plt.show()
 
     
