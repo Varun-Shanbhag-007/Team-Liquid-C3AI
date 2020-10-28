@@ -5,32 +5,34 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from matplotlib.animation import FuncAnimation
 
-squares= [[0,0,20,20],[40,40,60,60],[80,80,100,100]]
-entries = [(10,20), (50, 60), (90, 80)]
-
-
+squares= [[0,0,21,21],[39,39,61,61],[79,79,100,100]]
 
 matrix = []
 x = 101
 y = 101
 
+entries = [(10,21), (50, 61), (90, 79)]
 for i in range(x):
     temp=[]
     for j in range(y):
-        if((i>=0 and i<20) and (j>=0 and j<20)):
+        if((i>=0 and i<=20) and (j>=0 and j<=20)):
             temp.append(0)
-        elif((i>=40 and i<60) and (j>=40 and j<60)):
+        elif((i>=40 and i<=60) and (j>=40 and j<=60)):
             temp.append(0)
-        elif((i>=80 and i<100) and (j>=80 and j<100)):
+        elif((i>=80 and i<=100) and (j>=80 and j<=100)):
             temp.append(0)
         else:
             temp.append(1)        
     matrix.append(temp)
 
+    
+for entry in entries:
+    matrix[entry[0]][entry[1]] = 1
+
 
 #SIMULATION PARAMETERS
 scale = 100
-n = 10000  #Population size
+n = 50 #Population size
 infected_percent = 50  #percentage of infected people at the beginning of the simulation (0-100%)
 infection_radius=5  #radius of transmission in pixels (0-100)
 contraction_probability=50  #probability of transmission in percentage (0-100%)
@@ -51,11 +53,10 @@ for i in range(n):
     else:
         p = Person(i, random_coords, Status.SUSCEPTIBLE)
 
-    p.make_up_mind(entries)
+    p.make_up_mind(entries,matrix)
 
     population.append(p)
 
-print(population)
 fig = plt.figure(figsize=(18,18))
 ax = fig.add_subplot(111) 
 
@@ -64,16 +65,14 @@ ax.add_patch(patches.Rectangle((40,40),scale/5,scale/5,fill=False))
 ax.add_patch(patches.Rectangle((80,80),scale/5,scale/5,fill=False))
 
 scatt = ax.scatter([person.x for person in population], [person.y for person in population], s=4, c=[return_color(person.status.value) for person in population])
-print("************")
-print("ALL PLOTTED")
+
 
 def update(frame):
-    print("UPDATING")
     for person in population:
-        if person.movement == []:
-            person.make_up_mind(entries)
+        if len(person.movement) == 0:
+            person.make_up_mind(entries,matrix)
         
-        next_step = person.movement.pop()
+        next_step = person.movement.pop(0)
         person.x = next_step[0]
         person.y = next_step[1]
 
