@@ -6,7 +6,8 @@ import matplotlib.patches as patches
 from matplotlib.animation import FuncAnimation
 
 squares= [[0,0,20,20],[40,40,60,60],[80,80,100,100]]
-entries = [(100,200), (500, 600), (900, 800)]
+entries = [(10,20), (50, 60), (90, 80)]
+
 
 
 matrix = []
@@ -50,6 +51,8 @@ for i in range(n):
     else:
         p = Person(i, random_coords, Status.SUSCEPTIBLE)
 
+    p.make_up_mind(entries)
+
     population.append(p)
 
 print(population)
@@ -60,5 +63,34 @@ ax.add_patch(patches.Rectangle((0,0),scale/5,scale/5,fill=False))
 ax.add_patch(patches.Rectangle((40,40),scale/5,scale/5,fill=False))
 ax.add_patch(patches.Rectangle((80,80),scale/5,scale/5,fill=False))
 
-plt.scatter([person.x for person in population], [person.y for person in population], s=4, c=[return_color(person.status.value) for person in population])
+scatt = ax.scatter([person.x for person in population], [person.y for person in population], s=4, c=[return_color(person.status.value) for person in population])
+print("************")
+print("ALL PLOTTED")
+
+def update(frame):
+    print("UPDATING")
+    for person in population:
+        if person.movement == []:
+            person.make_up_mind(entries)
+        
+        next_step = person.movement.pop()
+        person.x = next_step[0]
+        person.y = next_step[1]
+
+        if(person.x > scale):
+            person.x = scale
+        if(person.x < 0):
+            person.x = 0
+        if person.y > scale:
+            person.y = scale
+        if person.y < 0:
+            person.y = 0
+
+    offsets = np.array([[person.x for person in population], [person.y for person in population]])
+    scatt.set_offsets(np.ndarray.transpose(offsets))
+    return scatt,
+
+animation = FuncAnimation(fig, update, blit=True, interval=25)
 plt.show()
+
+    

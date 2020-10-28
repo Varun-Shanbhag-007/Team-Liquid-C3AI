@@ -30,7 +30,7 @@ def within(point, squares):
 
 
 
-def getPath(matrix,x1,y1,x2,y2):
+def astar(matrix,x1,y1,x2,y2):
     grid = Grid(matrix = matrix)
 
     finder = AStarFinder(diagonal_movement=DiagonalMovement.never)
