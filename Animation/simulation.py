@@ -1,5 +1,5 @@
 from person import Person
-from utils import within, Status, return_color
+from utils import *
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
@@ -12,6 +12,8 @@ x = 101
 y = 101
 
 entries = [(10, 21), (50, 61), (90, 79)]
+inside_entries = [(10,19), (50, 59), (90, 81)]
+random_walk_time = 20
 for i in range(x):
     temp = []
     for j in range(y):
@@ -80,11 +82,48 @@ def update(frame):
 
         # Movement
         if len(person.movement) == 0:
-            person.make_up_mind(entries, matrix)
+            if person.random_walk == 0:
+                person.x, person.y = entries[person.dest.value-1]
+                person.random_walk = -1
 
-        next_step = person.movement.pop(0)
-        person.x = next_step[0]
-        person.y = next_step[1]
+            if person.random_walk == -1:
+                person.make_up_mind(entries, matrix)
+            else:
+                person.x += np.random.randint(-3,4) 
+                person.y += np.random.randint(-3,4)
+                if(person.x > squares[person.dest.value-1][2]):
+                    person.x = squares[person.dest.value-1][2]-1
+                if(person.x < squares[person.dest.value-1][0]):
+                    person.x = squares[person.dest.value-1][0]
+                if person.y > squares[person.dest.value-1][3]:
+                    person.y = squares[person.dest.value-1][3]-1
+                if person.y < squares[person.dest.value-1][1]:
+                    person.y = squares[person.dest.value-1][1]
+                person.random_walk -= 1
+            
+
+
+        if len(person.movement) == 1:
+            
+            if(person.dest == Destination.HOME):
+                pass
+            elif person.dest == Destination.LOC_A:
+                person.x, person.y = inside_entries[Destination.LOC_A.value-1]
+                person.random_walk = random_walk_time
+                person.movement.pop()
+            elif person.dest == Destination.LOC_B:
+                person.x, person.y = inside_entries[Destination.LOC_B.value-1]
+                person.random_walk = random_walk_time
+                person.movement.pop()
+            elif person.dest == Destination.LOC_C:
+                person.x, person.y = inside_entries[Destination.LOC_C.value-1]
+                person.random_walk = random_walk_time
+                person.movement.pop()
+        
+        if person.random_walk == -1:
+            next_step = person.movement.pop(0)
+            person.x = next_step[0]
+            person.y = next_step[1]
 
         if(person.x > scale):
             person.x = scale

@@ -1,4 +1,4 @@
-from utils import astar
+from utils import *
 import numpy as np
 
 
@@ -19,8 +19,11 @@ class Person:
 
         self.velocity = 1
         self.dest_x, self.dest_y = home_coords
+        self.dest = Destination.HOME
         self.movement = []
+        
         self.day_infected = -1
+        self.random_walk = -1
 
 
     def get_current_position(self):
@@ -34,6 +37,15 @@ class Person:
     def make_up_mind(self, entries, matrix):
         # print("Making mind for", self)
         dest = (np.random.choice(4, 1, p=[0.5, 0.2, 0.2, 0.1]))[0]
+
+        if dest == 0:
+            self.dest = Destination.HOME
+        elif dest == 1:
+            self.dest = Destination.LOC_A
+        elif dest == 2:
+            self.dest = Destination.LOC_B
+        elif dest == 3:
+            self.dest = Destination.LOC_C
 
         if dest != 0:
             self.movement = astar(matrix,int(self.x),int(self.y), entries[dest-1][0], entries[dest-1][1])

@@ -9,6 +9,12 @@ class Status(Enum):
     INFECTED = 1
     RECOVERED = 2
 
+class Destination(Enum):
+    HOME = 0
+    LOC_A = 1
+    LOC_B = 2
+    LOC_C = 3
+
 
 def return_color(status_enum):
     if status_enum == 0 :
