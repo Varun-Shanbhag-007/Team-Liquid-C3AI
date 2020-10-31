@@ -40,3 +40,8 @@ def astar(matrix,x1,y1,x2,y2):
     finder = AStarFinder(diagonal_movement=DiagonalMovement.never)
     path, runs = finder.find_path(grid.node(x1,y1),grid.node(x2,y2), grid)
     return path
+
+def closest_distance (healthy,infected,infected_index):
+    lst = np.array([[ np.linalg.norm(i-j) for j in infected] for i in healthy])
+    df = pd.DataFrame(lst, columns = infected_index)
+    return df
