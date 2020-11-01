@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from matplotlib.animation import FuncAnimation
+from tqdm import tqdm
 
 squares = [[0, 0, 21, 21], [39, 39, 61, 61], [79, 79, 100, 100]]
 
@@ -12,8 +13,9 @@ x = 101
 y = 101
 
 entries = [(10, 21), (50, 61), (90, 79)]
-inside_entries = [(10,19), (50, 59), (90, 81)]
+inside_entries = [(10, 19), (50, 59), (90, 81)]
 random_walk_time = 20
+
 for i in range(x):
     temp = []
     for j in range(y):
@@ -27,39 +29,58 @@ for i in range(x):
             temp.append(1)
     matrix.append(temp)
 
-
 for entry in entries:
     matrix[entry[0]][entry[1]] = 1
+
+roads = {}
+roads["AB"] = astar(matrix, entries[0][0], entries[0]
+                    [1], entries[1][0], entries[1][1])
+roads["BC"] = astar(matrix, entries[1][0], entries[1]
+                    [1], entries[2][0], entries[2][1])
+roads["CA"] = astar(matrix, entries[2][0], entries[2]
+                    [1], entries[0][0], entries[0][1])
+roads["BA"] = list(reversed(roads["AB"]))
+roads["CB"] = list(reversed(roads["BC"]))
+roads["AC"] = list(reversed(roads["CA"]))
+roads["AA"] = [entries[0]]
+roads["BB"] = [entries[1]]
+roads["CC"] = [entries[2]]
 
 
 # SIMULATION PARAMETERS
 scale = 100
 n = 100  # Population size
 # percentage of infected people at the beginning of the simulation (0-100%)
-infected_percent = 50
-infection_radius = 5  # radius of transmission in pixels (0-100)
+infected_percent = 0.20
+infection_radius = 1  # radius of transmission in pixels (0-100)
 # probability of transmission in percentage (0-100%)
-contraction_probability = 50
+contraction_probability = 0.20
 # p_aislamiento = 70  #percentage of the people in quarantine (0-100%)
-recovery_time = 200  # time taken to recover in number of frames (0-infinity)
+
 
 population = []
 currently_infected = 0
+currently_suseptible = 0
+currently_recovered = 0
 day = 0
 iteration = 0
-people_to_infect = n * infected_percent/100
+people_to_infect = n * infected_percent
 
-for i in range(n):
-    random_coords = (np.random.random()*scale, np.random.random()*scale)
+for i in tqdm(range(n)):
+    random_coords = (int(np.random.random()*scale),
+                     int(np.random.random()*scale))
     while(within(random_coords, squares)):
-        random_coords = (np.random.random()*scale, np.random.random()*scale)
+        random_coords = (int(np.random.random()*scale),
+                         int(np.random.random()*scale))
 
     if i < people_to_infect:
-        p = Person(i, random_coords, Status.INFECTED)
+        p = Person(i, random_coords, Status.INFECTED, entries, matrix, roads)
         currently_infected += 1
         p.day_infected = 0
     else:
-        p = Person(i, random_coords, Status.SUSCEPTIBLE)
+        p = Person(i, random_coords, Status.SUSCEPTIBLE,
+                   entries, matrix, roads)
+        currently_suseptible += 1
 
     p.make_up_mind(entries, matrix)
 
@@ -77,70 +98,102 @@ scatt = ax.scatter([person.x for person in population], [person.y for person in 
 
 
 def update(frame):
-    global day, iteration
+    global day, iteration, currently_infected, currently_recovered, currently_suseptible, contraction_probability
     for person in population:
 
+        if(person.is_quarantined):
+            pass
         # Movement
-        if len(person.movement) == 0:
-            if person.random_walk == 0:
-                person.x, person.y = entries[person.dest.value-1]
-                person.random_walk = -1
+        else:
+            if len(person.movement) == 0:
+                if person.random_walk == 0:
+                    person.x, person.y = entries[person.dest.value-1]
+                    person.random_walk = -1
+
+                if person.random_walk == -1:
+                    person.make_up_mind(entries, matrix)
+                else:
+                    person.x += np.random.randint(-3, 4)
+                    person.y += np.random.randint(-3, 4)
+                    if(person.x > squares[person.dest.value-1][2]):
+                        person.x = squares[person.dest.value-1][2]-1
+                    if(person.x < squares[person.dest.value-1][0]):
+                        person.x = squares[person.dest.value-1][0]
+                    if person.y > squares[person.dest.value-1][3]:
+                        person.y = squares[person.dest.value-1][3]-1
+                    if person.y < squares[person.dest.value-1][1]:
+                        person.y = squares[person.dest.value-1][1]
+                    person.random_walk -= 1
+
+            if len(person.movement) == 1:
+
+                if(person.dest == Destination.HOME):
+                    pass
+                elif person.dest == Destination.LOC_A:
+                    person.x, person.y = inside_entries[Destination.LOC_A.value-1]
+                    person.random_walk = random_walk_time
+                    person.movement.pop()
+                elif person.dest == Destination.LOC_B:
+                    person.x, person.y = inside_entries[Destination.LOC_B.value-1]
+                    person.random_walk = random_walk_time
+                    person.movement.pop()
+                elif person.dest == Destination.LOC_C:
+                    person.x, person.y = inside_entries[Destination.LOC_C.value-1]
+                    person.random_walk = random_walk_time
+                    person.movement.pop()
 
             if person.random_walk == -1:
-                person.make_up_mind(entries, matrix)
-            else:
-                person.x += np.random.randint(-3,4) 
-                person.y += np.random.randint(-3,4)
-                if(person.x > squares[person.dest.value-1][2]):
-                    person.x = squares[person.dest.value-1][2]-1
-                if(person.x < squares[person.dest.value-1][0]):
-                    person.x = squares[person.dest.value-1][0]
-                if person.y > squares[person.dest.value-1][3]:
-                    person.y = squares[person.dest.value-1][3]-1
-                if person.y < squares[person.dest.value-1][1]:
-                    person.y = squares[person.dest.value-1][1]
-                person.random_walk -= 1
-            
+                next_step = person.movement.pop(0)
+                person.x = next_step[0]
+                person.y = next_step[1]
 
+            if(person.x > scale):
+                person.x = scale
+            if(person.x < 0):
+                person.x = 0
+            if person.y > scale:
+                person.y = scale
+            if person.y < 0:
+                person.y = 0
 
-        if len(person.movement) == 1:
-            
-            if(person.dest == Destination.HOME):
-                pass
-            elif person.dest == Destination.LOC_A:
-                person.x, person.y = inside_entries[Destination.LOC_A.value-1]
-                person.random_walk = random_walk_time
-                person.movement.pop()
-            elif person.dest == Destination.LOC_B:
-                person.x, person.y = inside_entries[Destination.LOC_B.value-1]
-                person.random_walk = random_walk_time
-                person.movement.pop()
-            elif person.dest == Destination.LOC_C:
-                person.x, person.y = inside_entries[Destination.LOC_C.value-1]
-                person.random_walk = random_walk_time
-                person.movement.pop()
-        
-        if person.random_walk == -1:
-            next_step = person.movement.pop(0)
-            person.x = next_step[0]
-            person.y = next_step[1]
-
-        if(person.x > scale):
-            person.x = scale
-        if(person.x < 0):
-            person.x = 0
-        if person.y > scale:
-            person.y = scale
-        if person.y < 0:
-            person.y = 0
+            if person.status == Status.INFECTED:
+                # print("INFECTIONNNNNNNNNNNNNNNNNNNN")
+                if person.x == person.home_x and person.y == person.home_y:
+                    # He is at his own home. Cant spread.
+                    pass
+                else:
+                    for person2 in population:
+                        if person2.status == Status.INFECTED or person2.status == Status.RECOVERED:
+                            # print("SAFE LOLqqq")
+                            pass
+                        else:
+                            distance = np.sqrt((person2.x - person.x)
+                                               ** 2 + (person2.y - person.y)**2)
+                            # print(">", person, person2, distance)
+                            if distance <= infection_radius:
+                                if (person2.x, person2.y) == person2.home_coords:
+                                    pass
+                                else:
+                                    if np.random.random() <= contraction_probability:
+                                        print(">> Spread :")
+                                        person2.status = Status.INFECTED
+                                        person2.day_infected = day
+                                        currently_infected += 1
+                                        currently_suseptible -= 1
 
         # Infection
+        if person.status == Status.INFECTED and day - person.day_infected >= 2:
+            person.x, person.y = person.home_coords
+            person.is_quarantined = True
         if person.status == Status.INFECTED and day - person.day_infected >= 14:
             person.status = Status.RECOVERED
+            person.is_quarantined = False
+            currently_recovered += 1
+            currently_infected -= 1
 
     # Day count
     iteration += 1
-    if iteration == 200:
+    if iteration == 50:
         day += 1
         iteration = 0
 
@@ -149,7 +202,8 @@ def update(frame):
     scatt.set_offsets(np.ndarray.transpose(offsets))
     scatt.set_color([return_color(person.status.value)
                      for person in population])
-    print(day, iteration)
+    print(day, iteration, currently_suseptible,
+          currently_infected, currently_recovered)
     return scatt,
 
 

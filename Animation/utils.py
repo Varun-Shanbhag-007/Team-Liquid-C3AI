@@ -45,3 +45,21 @@ def closest_distance (healthy,infected,infected_index):
     lst = np.array([[ np.linalg.norm(i-j) for j in infected] for i in healthy])
     df = pd.DataFrame(lst, columns = infected_index)
     return df
+
+def findMyWay(origin, dest):
+    travel_key = ""
+    if origin == Destination.LOC_A:
+        travel_key += "A"
+    elif origin == Destination.LOC_B:
+        travel_key += "B"
+    elif origin == Destination.LOC_C:
+        travel_key += "C"
+
+    if dest == Destination.LOC_A:
+        travel_key += "A"
+    elif dest == Destination.LOC_B:
+        travel_key += "B"
+    elif dest == Destination.LOC_C:
+        travel_key += "C"
+
+    return travel_key
