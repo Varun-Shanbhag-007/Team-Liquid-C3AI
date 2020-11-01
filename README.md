@@ -1,8 +1,9 @@
 ### ToDo for Animation:
 - Quarantine infected people after 2 days of free roam
+    - Doesnt seem practical
+    - Need data or probability
 - Plot SIR Graph and terminate when infected = 0
 - Use numbers from DS team -> Data Driven aspect
-- Infected @ home, then no contaction
 
 
 - Solution specific :
