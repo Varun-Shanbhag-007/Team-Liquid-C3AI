@@ -49,10 +49,10 @@ roads["CC"] = [entries[2]]
 
 # SIMULATION PARAMETERS
 scale = 100
-n = 500  # Population size
+n = 3169  # Population size
 # percentage of infected people at the beginning of the simulation (0-100%)
-infected_percent = 0.30
-infection_radius = 1  # radius of transmission in pixels (0-100)
+infected_percent = 0.02
+infection_radius = 0.04  # radius of transmission in pixels (0-100)
 # probability of transmission in percentage (0-100%)
 contraction_probability = 0.20
 # p_aislamiento = 70  #percentage of the people in quarantine (0-100%)
