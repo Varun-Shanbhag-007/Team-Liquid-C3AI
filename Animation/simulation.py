@@ -51,7 +51,7 @@ roads["CC"] = [entries[2]]
 scale = 100
 n = 100  # Population size
 # percentage of infected people at the beginning of the simulation (0-100%)
-infected_percent = 0.20
+infected_percent = 0.30
 infection_radius = 1  # radius of transmission in pixels (0-100)
 # probability of transmission in percentage (0-100%)
 contraction_probability = 0.20
@@ -87,8 +87,7 @@ for i in tqdm(range(n)):
     population.append(p)
 
 fig = plt.figure(figsize=(18, 18))
-ax = fig.add_subplot(111)
-
+ax = fig.add_subplot(121)
 ax.add_patch(patches.Rectangle((0, 0), scale/5, scale/5, fill=False))
 ax.add_patch(patches.Rectangle((40, 40), scale/5, scale/5, fill=False))
 ax.add_patch(patches.Rectangle((80, 80), scale/5, scale/5, fill=False))
@@ -96,8 +95,29 @@ ax.add_patch(patches.Rectangle((80, 80), scale/5, scale/5, fill=False))
 scatt = ax.scatter([person.x for person in population], [person.y for person in population], s=4, c=[
                    return_color(person.status.value) for person in population])
 
+sir_graph = plt.Rectangle((0, 0), 100, 100, fill=False)
+ax.add_patch(sir_graph)
 
-def update(frame):
+
+cx = fig.add_subplot(122)
+cx.axis([0, 2000, 0, n])
+c_sus_plt, = cx.plot(currently_suseptible, color="blue", label="Suseptible")
+c_inf_plt, = cx.plot(currently_infected, color="red",
+                     label="Currently infected")
+print("Recovered :", currently_recovered)
+c_rec_plt, = cx.plot(currently_recovered, color="gray", label="Recovered")
+
+cx.legend(handles=[c_sus_plt, c_inf_plt, c_rec_plt])
+cx.set_xlabel("Time")
+cx.set_ylabel("People")
+
+cs = [currently_suseptible]
+ci = [currently_infected]
+cr = [0]
+t = [0]
+
+
+def update(frame, cs, ci, cr, t):
     global day, iteration, currently_infected, currently_recovered, currently_suseptible, contraction_probability
     for person in population:
 
@@ -175,7 +195,7 @@ def update(frame):
                                     pass
                                 else:
                                     if np.random.random() <= contraction_probability:
-                                        print(">> Spread :")
+                                        #print(">> Spread :")
                                         person2.status = Status.INFECTED
                                         person2.day_infected = day
                                         currently_infected += 1
@@ -185,7 +205,8 @@ def update(frame):
         if person.status == Status.INFECTED and day - person.day_infected >= 2:
             person.x, person.y = person.home_coords
             person.is_quarantined = True
-        if person.status == Status.INFECTED and day - person.day_infected >= 14:
+
+        if person.status == Status.INFECTED and day - person.day_infected >= 5:
             person.status = Status.RECOVERED
             person.is_quarantined = False
             currently_recovered += 1
@@ -193,19 +214,28 @@ def update(frame):
 
     # Day count
     iteration += 1
-    if iteration == 50:
+    if iteration == 200:
         day += 1
         iteration = 0
+
+    # update the plotting data
+    cs.append(currently_suseptible)
+    ci.append(currently_infected)
+    cr.append(currently_recovered)
+    t.append(frame)
 
     offsets = np.array([[person.x for person in population], [
                        person.y for person in population]])
     scatt.set_offsets(np.ndarray.transpose(offsets))
     scatt.set_color([return_color(person.status.value)
                      for person in population])
-    print(day, iteration, currently_suseptible,
-          currently_infected, currently_recovered)
-    return scatt,
+    #print(day, iteration, currently_suseptible,currently_infected, currently_recovered)
+    c_sus_plt.set_data(t, cs)
+    c_inf_plt.set_data(t, ci)
+    c_rec_plt.set_data(t, cr)
+    return scatt, c_sus_plt, c_inf_plt, c_rec_plt
 
 
-animation = FuncAnimation(fig, update, blit=True, interval=5)
+animation = FuncAnimation(fig, update, blit=True,
+                          interval=5, fargs=(cs, ci, cr, t))
 plt.show()
