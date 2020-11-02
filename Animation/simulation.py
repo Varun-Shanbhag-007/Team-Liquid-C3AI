@@ -49,7 +49,7 @@ roads["CC"] = [entries[2]]
 
 # SIMULATION PARAMETERS
 scale = 100
-n = 100  # Population size
+n = 500  # Population size
 # percentage of infected people at the beginning of the simulation (0-100%)
 infected_percent = 0.30
 infection_radius = 1  # radius of transmission in pixels (0-100)
@@ -100,7 +100,7 @@ ax.add_patch(sir_graph)
 
 
 cx = fig.add_subplot(122)
-cx.axis([0, 2000, 0, n])
+cx.axis([-100, 4000, -10, n])
 c_sus_plt, = cx.plot(currently_suseptible, color="blue", label="Suseptible")
 c_inf_plt, = cx.plot(currently_infected, color="red",
                      label="Currently infected")
@@ -197,16 +197,18 @@ def update(frame, cs, ci, cr, t):
                                     if np.random.random() <= contraction_probability:
                                         #print(">> Spread :")
                                         person2.status = Status.INFECTED
-                                        person2.day_infected = day
+                                        person2.frame_infected = frame
                                         currently_infected += 1
                                         currently_suseptible -= 1
 
         # Infection
-        if person.status == Status.INFECTED and day - person.day_infected >= 2:
+        # 200 frame is 1 day
+        if person.status == Status.INFECTED and frame - person.frame_infected >= 400:
             person.x, person.y = person.home_coords
             person.is_quarantined = True
 
-        if person.status == Status.INFECTED and day - person.day_infected >= 5:
+        # 200 frame is 1 day
+        if person.status == Status.INFECTED and frame - person.frame_infected >= 1000:
             person.status = Status.RECOVERED
             person.is_quarantined = False
             currently_recovered += 1

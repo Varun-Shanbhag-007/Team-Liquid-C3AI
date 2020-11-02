@@ -2,6 +2,7 @@ from utils import *
 import numpy as np
 import copy
 
+
 class Person:
 
     def __init__(self, i, home_coords, status, entries, matrix, roads):
@@ -13,9 +14,12 @@ class Person:
         self.home_coords = (self.home_x, self.home_y)
         self.curr_coords = (self.x, self.y)
         self.road_to_home = {}
-        self.road_to_home[Destination.LOC_A] = astar(matrix, entries[0][0], entries[0][1], self.home_x, self.home_y) #Loc A
-        self.road_to_home[Destination.LOC_B] = astar(matrix, entries[1][0], entries[0][1], self.home_x, self.home_y) #Loc B
-        self.road_to_home[Destination.LOC_C] = astar(matrix, entries[2][0], entries[0][1], self.home_x, self.home_y) #Loc C
+        self.road_to_home[Destination.LOC_A] = astar(
+            matrix, entries[0][0], entries[0][1], self.home_x, self.home_y)  # Loc A
+        self.road_to_home[Destination.LOC_B] = astar(
+            matrix, entries[1][0], entries[0][1], self.home_x, self.home_y)  # Loc B
+        self.road_to_home[Destination.LOC_C] = astar(
+            matrix, entries[2][0], entries[0][1], self.home_x, self.home_y)  # Loc C
         self.roads = roads
 
         self.status = status
@@ -26,18 +30,15 @@ class Person:
         self.dest_x, self.dest_y = home_coords
         self.dest = Destination.HOME
         self.movement = []
-        
-        self.day_infected = -1
-        self.random_walk = -1
 
+        self.frame_infected = -1
+        self.random_walk = -1
 
     def get_current_position(self):
         return (self.x, self.y)
 
-
     def quarantine(self, action):
         self.is_quarantined = action
-
 
     def make_up_mind(self, entries, matrix):
         origin = self.dest
@@ -58,10 +59,10 @@ class Person:
             self.movement = self.roads[findMyWay(origin, self.dest)]
         elif self.dest != Destination.HOME and origin == Destination.HOME:
             self.movement = list(reversed(self.road_to_home[self.dest]))
-        elif self.dest == Destination.HOME and origin == Destination.HOME: # home 2 home
+        elif self.dest == Destination.HOME and origin == Destination.HOME:  # home 2 home
             self.movement = [(self.home_x, self.home_y)]*100
 
         self.movement = copy.deepcopy(self.movement)
 
     def __repr__(self):
-        return("Person " + str(self.idx) +" -> "+ str(self.status) + " @ " + str(self.x) +" , "+ str(self.y) + "\n")
+        return("Person " + str(self.idx) + " -> " + str(self.status) + " @ " + str(self.x) + " , " + str(self.y) + "\n")
