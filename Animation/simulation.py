@@ -104,7 +104,6 @@ cx.axis([-100, 4000, -10, n])
 c_sus_plt, = cx.plot(currently_suseptible, color="blue", label="Suseptible")
 c_inf_plt, = cx.plot(currently_infected, color="red",
                      label="Currently infected")
-print("Recovered :", currently_recovered)
 c_rec_plt, = cx.plot(currently_recovered, color="gray", label="Recovered")
 
 cx.legend(handles=[c_sus_plt, c_inf_plt, c_rec_plt])
@@ -176,7 +175,7 @@ def update(frame, cs, ci, cr, t):
             if person.y < 0:
                 person.y = 0
 
-            if person.status == Status.INFECTED:
+            if frame % 10 == 0 and person.status == Status.INFECTED:
                 # print("INFECTIONNNNNNNNNNNNNNNNNNNN")
                 if person.x == person.home_x and person.y == person.home_y:
                     # He is at his own home. Cant spread.
@@ -203,7 +202,7 @@ def update(frame, cs, ci, cr, t):
 
         # Infection
         # 200 frame is 1 day
-        if person.status == Status.INFECTED and frame - person.frame_infected >= 400:
+        if person.status == Status.INFECTED and frame - person.frame_infected >= person.quarantine_in_frames:
             person.x, person.y = person.home_coords
             person.is_quarantined = True
 
@@ -239,5 +238,5 @@ def update(frame, cs, ci, cr, t):
 
 
 animation = FuncAnimation(fig, update, blit=True,
-                          interval=5, fargs=(cs, ci, cr, t))
+                          interval=25, fargs=(cs, ci, cr, t))
 plt.show()
