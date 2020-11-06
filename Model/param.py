@@ -1,0 +1,85 @@
+import numpy as np
+import numpy.linalg as la
+import preparedata
+
+r_confirmed_cases, r_confirmed_deaths, r_confirmed_recoveries, r_infection_rate, r_mortality_rate, r_recovery_rate, r_county_pop, r_county_pop_density, r_prob_visiting_grocery_store, r_prob_visiting_restaurant, r_prob_visiting_park = get_simulation_data('Orange_California_UnitedStates','2020-07-01','2020-07-15')
+
+infection_margin = [round(r_infection_rate[i]-r_infection_rate[i-1],6) for i in range(1,len(r_infection_rate)-1)]
+
+mortality_margin = [round(r_mortality_rate[i]-r_mortality_rate[i-1],6) for i in range(1,len(r_mortality_rate)-1)]
+
+recovery_margin = [round(r_recovery_rate[i]-r_recovery_rate[i-1],6) for i in range(1,len(r_recovery_rate)-1)]
+
+# parameter estimation
+w = np.arange(0.05,0.55,0.05) #ratio of suscpetible to total population
+alpha = np.arange(0.05,1.05,0.05).round(2) #asymptomatic rate e.g. 0.16
+#beta = np.arange(0.05,1,0.05)  #infection rate 
+#gamma = np.arange(0.05,1,0.05) #recovery rate
+#ups = np.arange(0.05,1,0.05)  #mortality rate
+
+P = r_county_pop
+Theta = len(r_confirmed_cases) #time windows
+S, I, R, D = [0]*Theta, [0]*Theta, [0]*Theta, [0]*Theta
+
+rho = 0.9 #exponential decay weight
+#params = np.array([beta, gamma, ups])
+#dt = np.dot(Phi,params)
+
+def calculate_Phi(s,i,alpha):
+    phi = np.array([[s*i/(s+i),-i,-alpha*i],[0,i,0],[0,0,i]])
+    return phi
+
+AW = []
+Phi = {}
+dt_mx = np.zeros((len(alpha),Theta-1,3))
+
+for i in range(len(w)):
+    for j in range(len(alpha)):
+        for day in range(Theta):
+            D[day] = r_confirmed_deaths[day]
+            R[day] = alpha[j]*r_confirmed_recoveries[day]
+            I[day] = alpha[j]*r_confirmed_cases[day]
+            S[day] = w[i]*alpha[j]*P - I[day] - R[day] - D[day]
+            AW.append([w[i],alpha[j],S[day],I[day],R[day],D[day]])
+            phi = calculate_Phi(S[day],I[day],alpha[j])
+            phi = np.multiply(rho**(Theta - day),phi)
+            Phi.update({(w[i],alpha[j],day):phi})
+        for day in range(1,Theta-1):
+            dt_mx[j][day][0] = alpha[j]*r_confirmed_cases[day] - alpha[j]*r_confirmed_cases[day-1] 
+            dt_mx[j][day][1] = alpha[j]*r_confirmed_recoveries[day] - alpha[j]*r_confirmed_recoveries[day-1]
+            dt_mx[j][day][2] = r_confirmed_deaths[day] - r_confirmed_deaths[day-1]
+            dt_mx[j][day] = np.multiply(rho**(Theta - day),dt_mx[j][day])
+
+# Sample Test
+sample_phi = Phi.get((0.05,0.05,0))
+for i in range(1,len(r_confirmed_cases)-1):
+    next_phi = Phi.get((0.45,0.15,i))
+    sample_phi = np.concatenate((sample_phi,next_phi))
+
+Phi_pinv = la.pinv(sample_phi)
+sample_dt_mx = np.hstack(dt_mx[0])
+#print(Phi_pinv.shape, sample_dt_mx.shape)
+
+params = np.dot(Phi_pinv,sample_dt_mx)
+params
+
+# calculate mean square error for w and a
+def loss_function(delta,phi,param):
+    mse = (la.norm(delta-np.dot(phi,param),2))**2
+    return mse
+
+mseList = {}
+for i in w:
+    for j in range(len(alpha)):
+        phi = Phi.get((i,alpha[j],0))
+        for m in range(1,Theta-1):
+            next_phi = Phi.get((i,alpha[j],m))
+            phi = np.concatenate((phi,next_phi))
+        Phi_pinv = la.pinv(phi)
+        dt = np.hstack(dt_mx[j])
+        param = np.dot(Phi_pinv,dt)
+        mse = loss_function(dt,phi,param)
+        mseList.update({(i,alpha[j]): mse})
+
+result = min(mseList, key=mseList.get) #w, alpha, beta, gamma, ups = [0.05, 0.05, 0.01814779, 0.00398241, 0.00184115]
+result
