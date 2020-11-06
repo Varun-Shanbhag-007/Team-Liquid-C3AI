@@ -1,5 +1,6 @@
 from utils import *
 import numpy as np
+import random
 import copy
 
 
@@ -23,6 +24,8 @@ class Person:
         self.roads = roads
 
         self.status = status
+
+        self.quarantine_in_frames = random.randint(1, 1000)
 
         self.is_quarantined = False
 
