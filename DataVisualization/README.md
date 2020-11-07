@@ -11,3 +11,6 @@ https://www.smallbizgenius.net/by-the-numbers/restaurant-industry-statistics/#gr
 ### Restaurants probability
 https://www.nrpa.org/blog/29-number-of-times-americans-visit-their-local-parks-annually/
 https://www.nps.gov/aboutus/visitation-numbers.htm
+
+## Plot SIR Graph Example
+preparedata.plot_SIR_graph(county = "Harris_Texas_UnitedStates", start_date = "2020-03-01", end_date = "2020-10-01", plot_susceptible = False)
