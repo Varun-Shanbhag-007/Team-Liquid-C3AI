@@ -1,5 +1,5 @@
 ## Sources
-### Counties Area -
+### Counties Area
 https://www.census.gov/library/publications/2011/compendia/usa-counties-2011.html
 
 ### Grocery probability
