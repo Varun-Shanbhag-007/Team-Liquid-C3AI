@@ -18,9 +18,9 @@ class Person:
         self.road_to_home[Destination.LOC_A] = astar(
             matrix, entries[0][0], entries[0][1], self.home_x, self.home_y)  # Loc A
         self.road_to_home[Destination.LOC_B] = astar(
-            matrix, entries[1][0], entries[0][1], self.home_x, self.home_y)  # Loc B
+            matrix, entries[1][0], entries[1][1], self.home_x, self.home_y)  # Loc B
         self.road_to_home[Destination.LOC_C] = astar(
-            matrix, entries[2][0], entries[0][1], self.home_x, self.home_y)  # Loc C
+            matrix, entries[2][0], entries[2][1], self.home_x, self.home_y)  # Loc C
         self.roads = roads
 
         self.status = status
@@ -68,4 +68,4 @@ class Person:
         self.movement = copy.deepcopy(self.movement)
 
     def __repr__(self):
-        return("Person " + str(self.idx) + " -> " + str(self.status) + " @ " + str(self.x) + " , " + str(self.y) + "\n")
+        return("Person " + str(self.idx) + " -> " + str(self.status) + " @ " + str(self.x) + " , " + str(self.y) + " dest = " + str(self.dest) + "\n")
