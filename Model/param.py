@@ -42,7 +42,8 @@ def get_county_params(county_name, time_range_1, time_range_2):
 # Running the parameter calculation (Arika's code) for every county and every 2 week time period
 final_copy_row = []
 county_list = calc_delta.get_county_list()
-for curr_county in range(20):
+print(county_list)
+for curr_county in range(len(county_list)):
     timeperiod_1, timeperiod_2 = calc_delta.get_time_period()
     for time_index in range(len(timeperiod_1)):
         a = get_county_params(county_list[curr_county], timeperiod_1[time_index], timeperiod_2[time_index])
@@ -62,8 +63,8 @@ for curr_county in range(20):
         recovery_margin = a[13]
         print(county_list[curr_county], timeperiod_1[time_index], timeperiod_2[time_index])
         # parameter estimation
-        w = np.arange(0.05, 0.55, 0.05)  # ratio of susceptible to total population
-        alpha = [0.15] #np.arange(0.05, 1.05, 0.05).round(2)  # asymptomatic rate e.g. 0.16
+        w = np.arange(0.05, 0.65, 0.05)  # ratio of susceptible to total population
+        alpha = np.arange(0.05, 0.55, 0.05).round(2)  # asymptomatic rate e.g. 0.16
         # beta = np.arange(0.05,1,0.05)  # infection rate
         # gamma = np.arange(0.05,1,0.05) # recovery rate
         # ups = np.arange(0.05,1,0.05)  # mortality rate
@@ -109,7 +110,7 @@ for curr_county in range(20):
         
         params = np.dot(Phi_pinv, sample_dt_mx)
         '''
-        params = None
+        params = {}
         mseList = {}
         for i in w:
             for j in range(len(alpha)):
@@ -119,15 +120,18 @@ for curr_county in range(20):
                     phi = np.concatenate((phi, next_phi))
                 Phi_pinv = la.pinv(phi)
                 dt = np.hstack(dt_mx[j])
-                params = np.dot(Phi_pinv, dt)
-                mse = loss_function(dt, phi, params)
-                mseList.update({(i, alpha[j]): [params, mse]})
-
-        result = min(mseList, key=mseList.get)
+                param = np.dot(Phi_pinv, dt)
+                params.update({(i, alpha[j]): param})
+                mse = loss_function(dt, phi, param)
+                mseList.update({(i, alpha[j]): mse})
+                
+        result = min(mseList, key = mseList.get)
+        final_params = params.get(result)
+        #final_params = mseList.get(result)[0]
         # w, alpha, beta, gamma, ups = [0.05, 0.05, 0.01814779, 0.00398241, 0.00184115]
-        final_copy_row.append([county_list[curr_county], timeperiod_1[time_index], timeperiod_2[time_index], result, params])
+        final_copy_row.append([county_list[curr_county], timeperiod_1[time_index], timeperiod_2[time_index], result, final_params])
         print(result)
-        print(params)
+        print(final_params)
 
 
 filename = "output.csv"
