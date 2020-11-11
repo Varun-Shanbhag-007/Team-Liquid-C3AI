@@ -5,7 +5,7 @@ import datetime
 # This function returns a list of the counties with the format "Countyname_State_UnitedStates" from the list of
 # counties that have recovered data, taken from Counties_w_Recovered.csv
 def get_county_list():
-    df = pd.read_csv("County_w_Recovered.csv").fillna('')
+    df = pd.read_csv('County_w_Recovered_hpop.csv').fillna('')
     currstate = ""
     full_county_names = []
     for i in range(len(df)):

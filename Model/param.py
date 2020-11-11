@@ -42,10 +42,10 @@ def get_county_params(county_name, time_range_1, time_range_2):
 # Running the parameter calculation (Arika's code) for every county and every 2 week time period
 final_copy_row = []
 county_list = calc_delta.get_county_list()
-for curr_county in county_list:
+for curr_county in range(20):
     timeperiod_1, timeperiod_2 = calc_delta.get_time_period()
     for time_index in range(len(timeperiod_1)):
-        a = get_county_params(curr_county, timeperiod_1[time_index], timeperiod_2[time_index])
+        a = get_county_params(county_list[curr_county], timeperiod_1[time_index], timeperiod_2[time_index])
         r_confirmed_cases = a[0]
         r_confirmed_deaths = a[1]
         r_confirmed_recoveries = a[2]
@@ -60,10 +60,10 @@ for curr_county in county_list:
         infection_margin = a[11]
         mortality_margin = a[12]
         recovery_margin = a[13]
-        print(curr_county, timeperiod_1[time_index], timeperiod_2[time_index])
+        print(county_list[curr_county], timeperiod_1[time_index], timeperiod_2[time_index])
         # parameter estimation
         w = np.arange(0.05, 0.55, 0.05)  # ratio of susceptible to total population
-        alpha = np.arange(0.05, 1.05, 0.05).round(2)  # asymptomatic rate e.g. 0.16
+        alpha = [0.15] #np.arange(0.05, 1.05, 0.05).round(2)  # asymptomatic rate e.g. 0.16
         # beta = np.arange(0.05,1,0.05)  # infection rate
         # gamma = np.arange(0.05,1,0.05) # recovery rate
         # ups = np.arange(0.05,1,0.05)  # mortality rate
@@ -96,7 +96,7 @@ for curr_county in county_list:
                     dt_mx[j][day][1] = alpha[j]*r_confirmed_recoveries[day] - alpha[j]*r_confirmed_recoveries[day-1]
                     dt_mx[j][day][2] = r_confirmed_deaths[day] - r_confirmed_deaths[day-1]
                     dt_mx[j][day] = np.multiply(rho**(Theta - day), dt_mx[j][day])
-
+        '''
         # Sample Test
         sample_phi = Phi.get((0.05, 0.05, 0))
         for i in range(1, len(r_confirmed_cases)-1):
@@ -106,9 +106,10 @@ for curr_county in county_list:
         Phi_pinv = la.pinv(sample_phi)
         sample_dt_mx = np.hstack(dt_mx[0])
         # print(Phi_pinv.shape, sample_dt_mx.shape)
-
+        
         params = np.dot(Phi_pinv, sample_dt_mx)
-
+        '''
+        params = None
         mseList = {}
         for i in w:
             for j in range(len(alpha)):
@@ -118,13 +119,13 @@ for curr_county in county_list:
                     phi = np.concatenate((phi, next_phi))
                 Phi_pinv = la.pinv(phi)
                 dt = np.hstack(dt_mx[j])
-                param = np.dot(Phi_pinv, dt)
-                mse = loss_function(dt, phi, param)
-                mseList.update({(i, alpha[j]): mse})
+                params = np.dot(Phi_pinv, dt)
+                mse = loss_function(dt, phi, params)
+                mseList.update({(i, alpha[j]): [params, mse]})
 
         result = min(mseList, key=mseList.get)
         # w, alpha, beta, gamma, ups = [0.05, 0.05, 0.01814779, 0.00398241, 0.00184115]
-        final_copy_row.append([curr_county, timeperiod_1[time_index], timeperiod_2[time_index], result, params])
+        final_copy_row.append([county_list[curr_county], timeperiod_1[time_index], timeperiod_2[time_index], result, params])
         print(result)
         print(params)
 

@@ -2,7 +2,7 @@ import requests
 import pandas as pd
 import numpy as np
 from matplotlib import pyplot as plt
-import c3aidatalake
+import DataVisualization.c3aidatalake
 
 
 def get_simulation_data(county, start_date, end_date):
