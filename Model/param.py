@@ -4,6 +4,7 @@ from preparedata import get_simulation_data
 import calc_delta
 import csv
 
+# Initializing variables needed for calculation
 r_confirmed_cases, r_confirmed_deaths, r_confirmed_recoveries, r_infection_rate, r_mortality_rate, r_recovery_rate, \
     r_county_pop, r_county_pop_density, r_prob_visiting_grocery_store, r_prob_visiting_restaurant, \
     r_prob_visiting_park = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
@@ -13,17 +14,21 @@ mortality_margin = 0
 recovery_margin = 0
 
 
-# calculate mean square error for w and a
+# This function returns the mean error for w and a
 def loss_function(delta, phi, param):
     mse = (la.norm(delta-np.dot(phi, param), 2))**2
     return mse
 
 
+# This function returns the phi value
 def calculate_Phi(s, i, alpha):
     phi = np.array([[s*i/(s+i), -i, -alpha*i], [0, i, 0], [0, 0, i]])
     return phi
 
 
+# This function returns the number of cases, recoveries, deaths and other parameters for a county.
+# It takes the county name, start date and end date as parameters and returns these values from the 
+# John Hopkins University: COVID-19 Data Repository using the get_simulation_data() function in preparedata.py
 def get_county_params(county_name, time_range_1, time_range_2):
         r_confirmed_cases, r_confirmed_deaths, r_confirmed_recoveries, r_infection_rate, r_mortality_rate, \
         r_recovery_rate, r_county_pop, r_prob_visiting_grocery_store, r_prob_visiting_restaurant, r_prob_visiting_park \
@@ -133,7 +138,7 @@ for curr_county in range(len(county_list)):
         print(result)
         print(final_params)
 
-
+# Writing the final values to a CSV file
 filename = "output.csv"
 fields = ['County', 'Start date', 'End date', 'w, alpha', 'beta, gamma, ups']
 # writing to csv file
