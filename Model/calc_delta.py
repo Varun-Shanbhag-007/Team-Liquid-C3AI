@@ -28,7 +28,7 @@ def get_county_list():
 def get_time_period():
     aDate1 = datetime.datetime.strptime("2020-03-02", "%Y-%m-%d") # Start date of the first time period
     aDate2 = datetime.datetime.strptime("2020-03-16", "%Y-%m-%d") # End date of the first time period
-    time_period = datetime.timedelta(weeks=2) # Time period being considered, eg. 2 weeks
+    time_period = datetime.timedelta(weeks=2)                     # Time period being considered, eg. 2 weeks
     final_dates1 = [str(aDate1)[0:10]]                            # Extracts the date from the datetime object
     final_dates2 = [str(aDate2)[0:10]]
     for i in range(14):
