@@ -77,6 +77,7 @@ for i in tqdm(range(n)):
         p = Person(i, random_coords, Status.INFECTED, entries, matrix, roads)
         currently_infected += 1
         p.day_infected = 0
+        p.covid_risk = 100
     else:
         p = Person(i, random_coords, Status.SUSCEPTIBLE,
                    entries, matrix, roads)
@@ -153,18 +154,10 @@ def update(frame, cs, ci, cr, t):
                     person.random_walk = random_walk_time
                     person.movement.pop()
                 elif person.dest == Destination.LOC_B:
-                    if person.status == Status.INFECTED:
-                        # person.movement = []
-                        print("***\nEntry denied to person", person)
-                        person.make_up_mind(entries, matrix)
-                        print("Chooses to go to", person.dest)
-                        print("His new movement : ",
-                              person.movement, "\n***\n")
-
-                    else:
-                        person.x, person.y = inside_entries[Destination.LOC_B.value-1]
-                        person.random_walk = random_walk_time
-                        person.movement.pop()
+                    # No holds. Regular movement in this space.
+                    person.x, person.y = inside_entries[Destination.LOC_B.value-1]
+                    person.random_walk = random_walk_time
+                    person.movement.pop()
                 elif person.dest == Destination.LOC_C:
                     person.x, person.y = inside_entries[Destination.LOC_C.value-1]
                     person.random_walk = random_walk_time

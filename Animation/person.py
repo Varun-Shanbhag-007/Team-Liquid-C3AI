@@ -37,6 +37,8 @@ class Person:
         self.frame_infected = -1
         self.random_walk = -1
 
+        self.covid_risk = 0
+
     def get_current_position(self):
         return (self.x, self.y)
 
