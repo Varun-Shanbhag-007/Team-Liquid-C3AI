@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from matplotlib.animation import FuncAnimation
 from tqdm import tqdm
+from sys import argv
+import pickle
 
 squares = [[0, 0, 21, 21], [39, 39, 61, 61], [79, 79, 100, 100]]
 
@@ -49,16 +51,16 @@ roads["CC"] = [entries[2]]
 
 # SIMULATION PARAMETERS
 scale = 100
-n = 20  # 3169  # Population size
+n = 3000  # 3169  # Population size 85% scaled down p ka 0.05 susceptible
 # percentage of infected people at the beginning of the simulation (0-100%)
-infected_percent = 0.8
+infected_percent = 0.02  # 893
 infection_radius = 0.04  # radius of transmission in pixels (0-100)
 # probability of transmission in percentage (0-100%)
-contraction_probability = 0.20
+contraction_probability = 0.0064 * 4
 # p_aislamiento = 70  #percentage of the people in quarantine (0-100%)
 
 
-population = []
+population: Person = []
 currently_infected = 0
 currently_suseptible = 0
 currently_recovered = 0
@@ -66,26 +68,40 @@ day = 0
 iteration = 0
 people_to_infect = n * infected_percent
 
-for i in tqdm(range(n)):
-    random_coords = (int(np.random.random()*scale),
-                     int(np.random.random()*scale))
-    while(within(random_coords, squares)):
+try:
+    if argv[1] != None:
+        population = pickle.load(open('save_file.dat', "rb"))
+
+    for person in population:
+        if person.status == Status.INFECTED:
+            currently_infected += 1
+        elif person.status == Status.SUSCEPTIBLE:
+            currently_suseptible += 1
+
+except:
+    for i in tqdm(range(n)):
         random_coords = (int(np.random.random()*scale),
                          int(np.random.random()*scale))
+        while(within(random_coords, squares)):
+            random_coords = (int(np.random.random()*scale),
+                             int(np.random.random()*scale))
 
-    if i < people_to_infect:
-        p = Person(i, random_coords, Status.INFECTED, entries, matrix, roads)
-        currently_infected += 1
-        p.day_infected = 0
-        p.covid_risk = 100
-    else:
-        p = Person(i, random_coords, Status.SUSCEPTIBLE,
-                   entries, matrix, roads)
-        currently_suseptible += 1
+        if i < people_to_infect:
+            p = Person(i, random_coords, Status.INFECTED,
+                       entries, matrix, roads)
+            currently_infected += 1
+            p.day_infected = 0
+            p.covid_risk = 100
+        else:
+            p = Person(i, random_coords, Status.SUSCEPTIBLE,
+                       entries, matrix, roads)
+            currently_suseptible += 1
 
-    p.make_up_mind(entries, matrix)
+        p.make_up_mind(entries, matrix)
 
-    population.append(p)
+        population.append(p)
+    print("Creating new DAT file")
+    pickle.dump(population, open('save_file.dat', "wb"))
 
 fig = plt.figure(figsize=(18, 18))
 ax = fig.add_subplot(121)
