@@ -116,6 +116,15 @@ cr = [0]
 t = [0]
 
 
+def check_dest(dest: Destination):
+    global population
+    score_at_dest = 0
+    for person in population:
+        if person.dest == dest:
+            score_at_dest += 1
+    return score_at_dest
+
+
 def update(frame, cs, ci, cr, t):
     global day, iteration, currently_infected, currently_recovered, currently_suseptible, contraction_probability
     for person in population:
