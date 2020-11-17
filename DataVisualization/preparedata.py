@@ -75,7 +75,7 @@ def get_simulation_data(county, start_date, end_date):
 
     return confirmed_cases, confirmed_deaths, confirmed_recoveries, infection_rate, mortality_rate, recovery_rate, county_total_pop, county_pop_density, prob_visiting_grocery_store, prob_visiting_restaurant, prob_visiting_park
 
-def plot_SIR_graph(county, start_date, end_date, plot_susceptible):
+def plot_SIR_graph(county, start_date, end_date, w):
     locations = c3aidatalake.fetch(
         "outbreaklocation",
         {
@@ -86,7 +86,7 @@ def plot_SIR_graph(county, start_date, end_date, plot_susceptible):
         , get_all = True
     )
 
-    population = int(locations['populationCDS'].values[0])
+    population = w * int(locations['populationCDS'].values[0])
     
     casecounts = c3aidatalake.evalmetrics(
         "outbreaklocation",
@@ -116,12 +116,11 @@ def plot_SIR_graph(county, start_date, end_date, plot_susceptible):
         casecounts[county+".CDS_Recovered.data"],
         label = "R"
     )
-    if plot_susceptible:
-        plt.plot(
-            casecounts["dates"], 
-            casecounts[county+".Susceptible.data"],
-            label = "S"
-        )
+    plt.plot(
+        casecounts["dates"], 
+        casecounts[county+".Susceptible.data"],
+        label = "S"
+    )
     plt.legend()
     plt.xticks(rotation = 45, ha = "right")
     plt.ylabel("Count")

@@ -1,0 +1,21 @@
+state,county,Count of recovered
+ Total,,0
+California,Contra Costa County,29
+,Fresno County,184
+,Kern County,161
+,Orange County,133
+,Placer County,126
+,Riverside County,177
+,Sacramento County,48
+,San Bernardino County,78
+,San Joaquin County,148
+,Ventura County,190
+California Total,,7153
+Nebraska,Douglas County,51
+Nebraska Total,,4743
+Tennessee,Davidson County,56
+,Shelby County,56
+Tennessee Total,,5320
+Texas,Harris County,198
+Texas Total,,198
+Grand Total,,59218

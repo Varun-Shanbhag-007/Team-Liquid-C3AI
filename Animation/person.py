@@ -32,6 +32,7 @@ class Person:
         self.is_quarantined = False
 
         self.velocity = 1
+        self.score = 0
         self.dest_x, self.dest_y = home_coords
         self.dest = Destination.HOME
         self.movement = []
