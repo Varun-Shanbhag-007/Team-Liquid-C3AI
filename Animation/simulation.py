@@ -56,7 +56,7 @@ n = 3000  # 3169  # Population size 85% scaled down p ka 0.05 susceptible
 infected_percent = 0.02  # 893
 infection_radius = 0.04  # radius of transmission in pixels (0-100)
 # probability of transmission in percentage (0-100%)
-contraction_probability = 0.0064 * 4
+contraction_probability = 0.0064 * 5
 # p_aislamiento = 70  #percentage of the people in quarantine (0-100%)
 
 
@@ -166,14 +166,31 @@ def update(frame, cs, ci, cr, t):
                 if(person.dest == Destination.HOME):
                     pass
                 elif person.dest == Destination.LOC_A:
-                    person.x, person.y = inside_entries[Destination.LOC_A.value-1]
-                    person.random_walk = random_walk_time
-                    person.movement.pop()
+                    if person.status == Status.INFECTED:
+                        # person.movement = []
+                        print("***\nEntry denied to person", person)
+                        person.make_up_mind(entries, matrix)
+                        print("Chooses to go to", person.dest)
+                        print("His new movement : ",
+                              person.movement, "\n***\n")
+
+                    else:
+                        person.x, person.y = inside_entries[Destination.LOC_B.value-1]
+                        person.random_walk = random_walk_time
+                        person.movement.pop()
                 elif person.dest == Destination.LOC_B:
-                    # No holds. Regular movement in this space.
-                    person.x, person.y = inside_entries[Destination.LOC_B.value-1]
-                    person.random_walk = random_walk_time
-                    person.movement.pop()
+                    if person.status == Status.INFECTED:
+                        # person.movement = []
+                        print("***\nEntry denied to person", person)
+                        person.make_up_mind(entries, matrix)
+                        print("Chooses to go to", person.dest)
+                        print("His new movement : ",
+                              person.movement, "\n***\n")
+
+                    else:
+                        person.x, person.y = inside_entries[Destination.LOC_B.value-1]
+                        person.random_walk = random_walk_time
+                        person.movement.pop()
                 elif person.dest == Destination.LOC_C:
                     person.x, person.y = inside_entries[Destination.LOC_C.value-1]
                     person.random_walk = random_walk_time
