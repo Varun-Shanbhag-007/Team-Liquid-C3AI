@@ -26,12 +26,12 @@ def get_county_list():
 # being considered for the parameter calculation. As of now, the dates start from 2020-03-02 to 2020-09-28 with the
 # time period of 2 weeks. This can be adjusted as needed.
 def get_time_period():
-    aDate1 = datetime.datetime.strptime("2020-03-02", "%Y-%m-%d")
-    aDate2 = datetime.datetime.strptime("2020-03-16", "%Y-%m-%d")
+    aDate1 = datetime.datetime.strptime("2020-05-01", "%Y-%m-%d") 
+    aDate2 = datetime.datetime.strptime("2020-05-15", "%Y-%m-%d")
     time_period = datetime.timedelta(weeks=2)
     final_dates1 = [str(aDate1)[0:10]]
     final_dates2 = [str(aDate2)[0:10]]
-    for i in range(14):
+    for i in range(7):
         aDate1 = aDate1 + time_period
         aDate1_str = str(aDate1)
         final_dates1.append(aDate1_str[0:10])

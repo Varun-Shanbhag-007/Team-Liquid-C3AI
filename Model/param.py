@@ -1,3 +1,9 @@
+import os
+import sys
+currpath = os.getcwd()
+currpath = currpath.replace('Model','DataVisualization')
+sys.path.insert(0, currpath)
+
 import numpy as np
 import numpy.linalg as la
 from preparedata import get_simulation_data
@@ -42,7 +48,6 @@ def get_county_params(county_name, time_range_1, time_range_2):
 # Running the parameter calculation (Arika's code) for every county and every 2 week time period
 final_copy_row = []
 county_list = calc_delta.get_county_list()
-print(county_list)
 for curr_county in range(len(county_list)):
     timeperiod_1, timeperiod_2 = calc_delta.get_time_period()
     for time_index in range(len(timeperiod_1)):
@@ -134,7 +139,7 @@ for curr_county in range(len(county_list)):
         print(final_params)
 
 
-filename = "output.csv"
+filename = "output_2w_5-8.csv"
 fields = ['County', 'Start date', 'End date', 'w, alpha', 'beta, gamma, ups']
 # writing to csv file
 with open(filename, 'w') as csvfile:
