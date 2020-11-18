@@ -2,6 +2,8 @@ from utils import *
 import numpy as np
 import random
 import copy
+from simulation import check_dest
+from utils import MAX_SAFEST
 
 
 class Person:
@@ -46,16 +48,25 @@ class Person:
 
     def make_up_mind(self, entries, matrix):
         origin = self.dest
-        dest = (np.random.choice(4, 1, p=[0.5, 0.2, 0.2, 0.1]))[0]
+        mind_made = False
 
-        if dest == 0:
-            self.dest = Destination.HOME
-        elif dest == 1:
-            self.dest = Destination.LOC_A
-        elif dest == 2:
-            self.dest = Destination.LOC_B
-        elif dest == 3:
-            self.dest = Destination.LOC_C
+        while(!mind_made):
+            dest = (np.random.choice(4, 1, p=[0.5, 0.2, 0.2, 0.1]))[0]
+            safety_score = check_dest(dest):
+
+            if dest == 0:
+                self.dest = Destination.HOME
+                mind_made = True
+            else:
+                if safety_score <= MAX_SAFEST:
+                    if dest == 1:
+                        self.dest = Destination.LOC_A
+                    elif dest == 2:
+                        self.dest = Destination.LOC_B
+                    elif dest == 3:
+                        self.dest = Destination.LOC_C
+
+                    mind_made = True
 
         if self.dest == Destination.HOME and origin != Destination.HOME:
             self.movement = self.road_to_home[origin]
