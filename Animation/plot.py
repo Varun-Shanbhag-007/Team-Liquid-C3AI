@@ -3,7 +3,7 @@ from numpy.matrixlib.defmatrix import bmat
 import pandas as pd
 
 
-def plot_difference(currently_infected_sol, currently_infected_normal):
+def plot_difference(currently_infected_sol, currently_infected_b_closed, currently_infected_normal):
 
     time = list(range(1, 4005))
     fig = plt.figure(figsize=(18, 18))
@@ -13,8 +13,10 @@ def plot_difference(currently_infected_sol, currently_infected_normal):
                          label="Infected during Solution", linestyle='dashed')
     c_inf_plt_n, = cx.plot(currently_infected_normal, color="red",
                            label="Infected during B_Closed")
+    c_inf_plt_b_closed, = cx.plot(currently_infected_b_closed, color="red",
+                                  label="Infected during B Closed", linestyle='dashdot')
 
-    cx.legend(handles=[c_inf_plt, c_inf_plt_n])
+    cx.legend(handles=[c_inf_plt, c_inf_plt_n, c_inf_plt_b_closed])
     cx.fill_between(time, currently_infected_normal,
                     currently_infected_sol, facecolor='g', alpha=0.5)
     cx.set_xlabel("Time")
@@ -59,24 +61,30 @@ currently_suseptible_norm = df_norm[0]
 currently_infected_norm = df_norm[1]
 currently_recovered_norm = df_norm[2]
 
-currently_suseptible_sol = df_sol[0]
-currently_infected_sol = df_sol[1]
-currently_recovered_sol = df_sol[2]
 
 currently_suseptible_b_closed = df_b_closed[0]
 currently_infected_b_closed = df_b_closed[1]
 currently_recovered_b_closed = df_b_closed[2]
 
+currently_suseptible_sol = df_sol[0]
+currently_infected_sol = df_sol[1]
+currently_recovered_sol = df_sol[2]
 
-norm_max = currently_infected_norm.max()
-sol_max = currently_infected_sol.max()
+print()
 
-print(f"Max infection with Normal {norm_max}")
-print(f"Max infection with Implemented Solution {sol_max}")
+norm_infection = 3000 - currently_suseptible_norm.iloc[-1]
+sol_infection = 3000 - currently_suseptible_sol.iloc[-1]
+b_closed_infection = 3000 - currently_suseptible_b_closed.iloc[-1]
 
-print(f"Solution drops infection rate by {(norm_max-sol_max)/norm_max}")
+print(f"Infected with Normal {norm_infection}")
+print(f"Infected with B-Closed Solution {b_closed_infection}")
+print(f"Infected with Implemented Solution {sol_infection}")
 
-plot_difference(currently_infected_sol, currently_infected_b_closed)
+print(
+    f"Solution drops infection rate by {(norm_infection-sol_infection)/norm_infection}")
+
+plot_difference(currently_infected_sol,
+                currently_infected_b_closed, currently_infected_norm)
 
 # plot_all(currently_suseptible_sol, currently_infected_sol, currently_recovered_sol,
 #          currently_suseptible_b_closed, currently_infected_b_closed, currently_recovered_b_closed)
