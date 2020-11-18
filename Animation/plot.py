@@ -51,9 +51,13 @@ def plot_all(currently_suseptible_sol, currently_infected_sol, currently_recover
 
 #############___MAIN___#################
 
-
+df_norm = pd.read_csv('C3AI\Results\\Normal.csv', header=None)
 df_sol = pd.read_csv('C3AI\Results\Sol_.5_1_.8.csv', header=None)
 df_b_closed = pd.read_csv('C3AI\Results\Sol_Only_B_Closed.csv', header=None)
+
+currently_suseptible_norm = df_norm[0]
+currently_infected_norm = df_norm[1]
+currently_recovered_norm = df_norm[2]
 
 currently_suseptible_sol = df_sol[0]
 currently_infected_sol = df_sol[1]
@@ -64,13 +68,13 @@ currently_infected_b_closed = df_b_closed[1]
 currently_recovered_b_closed = df_b_closed[2]
 
 
-b_max = currently_infected_b_closed.max()
+norm_max = currently_infected_norm.max()
 sol_max = currently_infected_sol.max()
 
-print(f"Max infection with B Closed {b_max}")
+print(f"Max infection with Normal {norm_max}")
 print(f"Max infection with Implemented Solution {sol_max}")
 
-print(f"Solution drops infection rate by {(b_max-sol_max)/b_max}")
+print(f"Solution drops infection rate by {(norm_max-sol_max)/norm_max}")
 
 plot_difference(currently_infected_sol, currently_infected_b_closed)
 
