@@ -23,6 +23,8 @@ confirmed_cases, confirmed_deaths, confirmed_recoveries, infection_rate, mortali
 #### plot_SIR_graph
 preparedata.plot_SIR_graph(county = "Harris_Texas_UnitedStates", start_date = "2020-03-01", end_date = "2020-10-01", w = 0.1)
 
+## Usage in this project
+preparedata.py is used in param.py from the Model directory. 
 
 ## Sources
 ### From C3.ai COVID-19 Data Lake
@@ -40,6 +42,4 @@ Probability an American person goes to a park
 Probability an American person goes to a restaurants  
 [3] https://www.nrpa.org/blog/29-number-of-times-americans-visit-their-local-parks-annually/ https://www.nps.gov/aboutus/visitation-numbers.htm
 
-## Usage in this project
-preparedata.py is used in param.py from the Model directory. 
  
