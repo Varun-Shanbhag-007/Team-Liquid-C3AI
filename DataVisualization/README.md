@@ -24,10 +24,15 @@ preparedata.py is used in param.py from the Model directory.
 
 ## Sources
 ### From C3.ai COVID-19 Data Lake
+
 Corona Data Scraper: COVID-19 Coronavirus Case Data
+
 Google: COVID-19 Community Mobility Reports
+
 Johns Hopkins University: COVID-19 Data Repository
+
 US Census Bureau: County Population by Age, Sex, Race, and Hispanic Origin
+
 
 ### External Sources
 Probability an American person goes to a grocery store  
