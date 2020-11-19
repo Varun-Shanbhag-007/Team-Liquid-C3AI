@@ -40,6 +40,6 @@ Probability an American person goes to a park
 Probability an American person goes to a restaurants  
 [3] https://www.nrpa.org/blog/29-number-of-times-americans-visit-their-local-parks-annually/ https://www.nps.gov/aboutus/visitation-numbers.htm
 
-### Usage in this project
+## Usage in this project
 preparedata.py is used in param.py from the Model directory. 
  
