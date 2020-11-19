@@ -13,10 +13,14 @@ The number of confirmed cases, deaths, and recoveries for a given county are ret
 The population of the given county is retrieved from the data provided by US Census Bureau through the PopulationData API. 
 
 ## Examples
-### get_simulation_data
+### Kern_SIR_Plot
+Kern_SIR_Plot is an expample notebook. It uses get_simulation_data function and plots the SIR graph.  
+
+### preparedata
+#### get_simulation_data
 confirmed_cases, confirmed_deaths, confirmed_recoveries, infection_rate, mortality_rate,recovery_rate, county_pop, prob_visiting_grocery_store, prob_visiting_restaurant, prob_visiting_park = preparedata.get_simulation_data('Kern_California_UnitedStates','2020-05-01','2020-08-29')
 
-### plot_SIR_graph
+#### plot_SIR_graph
 preparedata.plot_SIR_graph(county = "Harris_Texas_UnitedStates", start_date = "2020-03-01", end_date = "2020-10-01", w = 0.1)
 
 
@@ -35,3 +39,7 @@ Probability an American person goes to a park
     
 Probability an American person goes to a restaurants  
 [3] https://www.nrpa.org/blog/29-number-of-times-americans-visit-their-local-parks-annually/ https://www.nps.gov/aboutus/visitation-numbers.htm
+
+### Usage in this project
+preparedata.py is used in param.py from the Model directory. 
+ 
