@@ -1,7 +1,7 @@
 import os
 import sys
 currpath = os.getcwd()
-currpath = currpath.replace('Model','DataVisualization')
+currpath = currpath.replace('Model','DataVisualization/source')
 sys.path.insert(0, currpath)
 
 import numpy as np
@@ -50,7 +50,7 @@ def get_county_params(county_name, time_range_1, time_range_2):
                 r_prob_visiting_restaurant, r_prob_visiting_park, infection_margin, mortality_margin, recovery_margin,)
 
 
-# Running the parameter calculation (Arika's code) for every county and every 2 week time period
+# Running the parameter calculation for every county and every 2 week time period
 final_copy_row = []
 county_list = calc_delta.get_county_list()
 for curr_county in range(len(county_list)):

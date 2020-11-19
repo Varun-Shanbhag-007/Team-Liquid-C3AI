@@ -1,11 +1,14 @@
+import os
 import pandas as pd
 import datetime
 
+path = os.path.dirname(__file__)
+countypath = path+'/data/County_w_Recovered.csv'
 
 # This function returns a list of the counties with the format "Countyname_State_UnitedStates" from the list of
 # counties that have recovered data, taken from Counties_w_Recovered.csv
 def get_county_list():
-    df = pd.read_csv('/data/County_w_Recovered.csv').fillna('')
+    df = pd.read_csv(countypath).fillna('')
     currstate = ""
     full_county_names = []
     for i in range(len(df)):

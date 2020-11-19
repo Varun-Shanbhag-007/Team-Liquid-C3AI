@@ -156,22 +156,23 @@ def plot_SIR_graph(county, start_date, end_date, w):
     casecounts[county+'.Active_Cases.data'] = casecounts[county+'.CDS_Cases.data'] - casecounts[county+'.CDS_Recovered.data'] - casecounts[county+'.CDS_Deaths.data']
     casecounts[county+'.Susceptible.data'] = population - casecounts[county+'.CDS_Cases.data'] - casecounts[county+'.CDS_Recovered.data'] - casecounts[county+'.CDS_Deaths.data']
 
+    
     plt.figure(figsize = (8, 6))
-    plt.plot(
-        casecounts["dates"],
-        casecounts[county+".Active_Cases.data"],
-        label = "I"
-    )
-    plt.plot(
-        casecounts["dates"],
-        casecounts[county+".CDS_Recovered.data"],
-        label = "R"
-    )
 
     plt.plot(
         casecounts["dates"], 
         casecounts[county+".Susceptible.data"],
-        label = "S"
+        label = "Susceptible"
+    )
+    plt.plot(
+        casecounts["dates"],
+        casecounts[county+".Active_Cases.data"],
+        label = "Infected"
+    )
+    plt.plot(
+        casecounts["dates"],
+        casecounts[county+".CDS_Recovered.data"],
+        label = "Removed"
     )
 
     plt.legend()
