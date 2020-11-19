@@ -5,6 +5,40 @@ from matplotlib import pyplot as plt
 import c3aidatalake
 
 def get_simulation_data(county, start_date, end_date):
+    """Returns the data required for simulation given a county, start_date, end_date
+
+    Parameters
+    ----------
+    county : str
+        The name of the county 
+    start_date : str
+        The start date in the format 'YYYY-MM-DD'
+    county : str
+        The end date in the format 'YYYY-MM-DD'
+
+    Returns
+    -------
+    int
+        confirmed_cases - confirmed cases for the county from Johns Hopkins University data
+    int
+        confirmed_deaths - confirmed deaths for the county from Johns Hopkins University data
+    int
+        confirmed_recoveries - confirmed recoveries for the county from Corona Data Scraper data
+    float
+        infection_rate - beta in the SIR model
+    float
+        mortality_rate - rate of confirmed deaths over confirmed cases
+    float
+        recovery_rate - rate of confirmed recoveries over confirmed cases
+    int
+        county_pop - population of the input county
+    list
+        prob_visiting_grocery_store - daily probability of an American person visiting a grocery store in the range(start_date, end_date) 
+    list
+        prob_visiting_restaurant - daily probability of an American person visiting a restaurant in the range(start_date, end_date) 
+    list
+        prob_visiting_park - daily probability of an American person visiting a park in the range(start_date, end_date) 
+    """
     population = c3aidatalake.fetch(
         "populationdata",
         {
@@ -76,6 +110,23 @@ def get_simulation_data(county, start_date, end_date):
     return confirmed_cases, confirmed_deaths, confirmed_recoveries, infection_rate, mortality_rate, recovery_rate, county_total_pop, prob_visiting_grocery_store, prob_visiting_restaurant, prob_visiting_park
 
 def plot_SIR_graph(county, start_date, end_date, w):
+    """Plots the SIR graph for the given county
+
+    Parameters
+    ----------
+    county : str
+        The name of the county 
+    start_date : str
+        The start date in the format 'YYYY-MM-DD'
+    county : str
+        The end date in the format 'YYYY-MM-DD'
+    w: float
+        w value is a fracion of the population that is the initial susuptible population
+
+    Returns
+    -------
+        Nothing
+    """
     locations = c3aidatalake.fetch(
         "outbreaklocation",
         {
