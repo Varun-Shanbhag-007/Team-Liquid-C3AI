@@ -18,17 +18,17 @@ def get_simulation_data(county, start_date, end_date):
 
     Returns
     -------
-    int
-        confirmed_cases - confirmed cases for the county from Johns Hopkins University data
-    int
-        confirmed_deaths - confirmed deaths for the county from Johns Hopkins University data
-    int
-        confirmed_recoveries - confirmed recoveries for the county from Corona Data Scraper data
-    float
+    list
+        confirmed_cases - list of confirmed cases for the county from Johns Hopkins University data through the range(start_date, end_date)
+    list
+        confirmed_deaths - list of confirmed deaths for the county from Johns Hopkins University data through the range(start_date, end_date)
+    list
+        confirmed_recoveries - list of confirmed recoveries for the county from Corona Data Scraper data through the range(start_date, end_date)
+    list
         infection_rate - beta in the SIR model
-    float
+    list
         mortality_rate - rate of confirmed deaths over confirmed cases
-    float
+    list
         recovery_rate - rate of confirmed recoveries over confirmed cases
     int
         county_pop - population of the input county
