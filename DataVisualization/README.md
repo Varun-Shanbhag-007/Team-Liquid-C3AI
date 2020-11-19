@@ -10,7 +10,7 @@ Given a county, the start and end date for the SIR graph along with the initial 
 
 ## Examples
 ### Kern_SIR_Plot.ipynb
-Kern_SIR_Plot is an expample notebook. It uses get_simulation_data function and plots the SIR graph.  
+Kern_SIR_Plot is an example notebook. It uses get_simulation_data function and plots the SIR graph.  
 
 ### preparedata.py
 #### get_simulation_data
