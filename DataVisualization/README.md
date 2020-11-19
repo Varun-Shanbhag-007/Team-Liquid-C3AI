@@ -1,16 +1,12 @@
 ## Description
 ### get_simulation_data
-Given a county along with the start and the end date for simulation, this function returns the data required for simulation.  
-The number of confirmed cases, deaths, and recoveries for a given county are retrieved from the data provided by Johns Hopkins University and Corona Data Scraper through the OutbreakLocation API. Using this data infection_rate, mortality_rate and recovery_rate are calculated.  
+Given a county along with the start and end date for simulation, this function returns the data required for simulation.  
+The number of confirmed cases, deaths, and recoveries for a given county are retrieved from the data provided by Johns Hopkins University and Corona Data Scraper through the OutbreakLocation API. Using this data, infection_rate, mortality_rate and recovery_rate are calculated.  
 Furthermore, the population of the given county is retrieved from the data provided by US Census Bureau through the PopulationData API.  
-To calculate probabilities of a person visiting a grocery store, a restaurant, and a visiting park are calculated using mobility data provided by Google through OutbreakLocation API along with three external sources [1, 2, 3]. These external sources provide probabilities of an American person going to a grocery store, a restaurant, and a visiting park.  
-Google's mobility data provides normalized trends for the given range of dates. 
+To calculate probabilities of a person visiting a grocery store, a restaurant, and a visiting park are calculated using mobility data provided by Google through OutbreakLocation API along with three external sources [1, 2, 3]. These external sources provide probabilities of an U.S. resident going to a grocery store, a restaurant, and visiting park. Google's mobility data provides normalized trends for the given range of dates. 
 
 ### plot_SIR_graph
-Given a county, start and end date for the SIR graph along with the w value, this function plots the SIR graph for it.  
-The w value is a fraction of the population that is the initial susceptible population.  
-The number of confirmed cases, deaths, and recoveries for a given county are retrieved from the data provided by Corona Data Scraper through the OutbreakLocation API.  
-The population of the given county is retrieved from the data provided by US Census Bureau through the PopulationData API. 
+Given a county, the start and end date for the SIR graph along with the initial ratio of susceptible to total population (w), this function plots the SIR graph for it. The number of confirmed cases, deaths, and recoveries for a given county are retrieved from the data provided by Corona Data Scraper through the OutbreakLocation API. The population of the given county is retrieved from the data provided by US Census Bureau through the PopulationData API. 
 
 ## Examples
 ### Kern_SIR_Plot.ipynb
@@ -37,7 +33,6 @@ Probability an American person goes to a grocery store
 
 Probability an American person goes to a park  
 [2] https://www.smallbizgenius.net/by-the-numbers/restaurant-industry-statistics/#gref  
-
     
 Probability an American person goes to a restaurants  
 [3] https://www.nrpa.org/blog/29-number-of-times-americans-visit-their-local-parks-annually/ https://www.nps.gov/aboutus/visitation-numbers.htm
