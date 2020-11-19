@@ -10,7 +10,6 @@ Model
 
 
 ### Team Liquid Report : Anonymous Contact Tracing and Mitigating Spread of COVID-19 using Bluetooth Device
----
 
 ### Introduction
 ---
